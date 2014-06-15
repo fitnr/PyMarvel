@@ -96,7 +96,7 @@ You can chain methods into one line:
 
 or even:
 
-    >>> events = self.m.get_series(characters="1009718").data.result.get_characters().data.result.get_comics().data.results.get_creators().data.result.get_events()
+    >>> events = self.m.get_series(characters="1009718").data.result.get_characters().data.result.get_comics().data.result.get_creators().data.result.get_events()
 
 would be the equivalent to calling:
 
@@ -110,7 +110,7 @@ would be the equivalent to calling:
 Pagination
 ==========
 
-    >>> xmen = m.get_single_series(403).data.results.get_characters(limit=5)
+    >>> xmen = m.get_single_series(403).data.result.get_characters(limit=5)
     >>> for xm in xmen.data.results:
     ...     print xm.name
     
