@@ -94,50 +94,8 @@ class Story(MarvelObject):
         from .comic import ComicSummary
         return ComicSummary(self.marvel, self.dict['originalIssue'])
 
-        
-    def get_creators(self, *args, **kwargs):
-        """
-        Returns a full CreatorDataWrapper object for this story.
-
-        /stories/{storyId}/creators
-
-        :returns:  CreatorDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .creator import Creator, CreatorDataWrapper
-        return self.get_related_resource(Creator, CreatorDataWrapper, args, kwargs)
-
-    def get_characters(self, *args, **kwargs):
-        """
-        Returns a full CharacterDataWrapper object for this story.
-
-        /stories/{storyId}/characters
-
-        :returns:  CharacterDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .character import Character, CharacterDataWrapper
-        return self.get_related_resource(Character, CharacterDataWrapper, args, kwargs)
-
-    def get_comics(self, *args, **kwargs):
-        """
-        Returns a full ComicDataWrapper object this story.
-
-        /stories/{seriestoryIdsId}/comics
-
-        :returns:  ComicDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .comic import Comic, ComicDataWrapper        
-        return self.get_related_resource(Comic, ComicDataWrapper, args, kwargs)
-
-    def get_events(self, *args, **kwargs):
-        """
-        Returns a full EventDataWrapper object this story.
-
-        /stories/{storyId}/events
-
-        :returns:  EventDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .event import Event, EventDataWrapper
-        return self.get_related_resource(Event, EventDataWrapper, args, kwargs)
+    def get_stories(self):
+        raise AttributeError("'Story' has no attribute get_stories")
 
 
 class StoryList(List):

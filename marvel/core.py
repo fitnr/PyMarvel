@@ -10,10 +10,20 @@ class MarvelObject(object):
     Base class for all Marvel API classes
     """
 
-    def __init__(self, marvel, dict):
-        self.marvel = marvel
-        self.dict = dict
+    def __init__(self, marvel, response, **params):
+        """
+        :param marvel: Instance of Marvel class
+        :type marvel: marvel.Marvel
+        :param dict: Dict of object, created from json response.
+        :type response: dict
+        :param params: Optional dict of query params sent to original API call
+        :type params: dict
         
+        """
+        self.marvel = marvel
+        self.dict = response or dict()
+        self.params = params or dict()
+
     def __unicode__(self):
         """
         :returns:  str -- Name or Title of Resource
@@ -54,27 +64,30 @@ class MarvelObject(object):
         for item in _list:
             items.append(_Class(self.marvel, item))
         return items
-        
-    def get_related_resource(self, _Class, _ClassDataWrapper, *args, **kwargs):
+
+    def get_related_resource(self, method, **kwargs):
         """
         Takes a related resource Class 
         and returns the related resource DataWrapper.
         For Example: Given a Character instance, return
         a ComicsDataWrapper related to that character.
-        /character/{characterId}/comics
+        /comics/?character=id
 
-        :param _Class: The Resource class retrieve
-        :type _Class: core.MarvelObject
-        :param _ClassDataWrapper: The Resource response object
-        :type _Class: core.MarvelObject
+        :param method: The method of marvel class to run
+        :type method:
         :param kwargs: dict of query params for the API
         :type kwargs: dict
         
         :returns:  DataWrapper -- DataWrapper for requested Resource
         """
-        url = "%s/%s/%s" % (self.resource_url(), self.id, _Class.resource_url())
-        response = self.marvel._call(url, **kwargs)
-        return _ClassDataWrapper(self.marvel, response)
+        # Copy params
+        # resource_url name matches the key for the id.
+        params = dict((k, v) for k, v in self.params)
+        params[self._resource_url] = self.id
+
+        # kwargs override the internal values
+        params.update(kwargs)
+        return method(**params)
 
     def str_to_datetime(self, _str):
         """
@@ -85,24 +98,52 @@ class MarvelObject(object):
         #Hacked off %z timezone because reasons
         return datetime.strptime(_str[:-5], '%Y-%m-%dT%H:%M:%S')
 
+    def get_creators(self, **kwargs):
+        """
+        Returns a full CharacterDataWrapper object this character.
+        :returns:  CharacterDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_creators, **kwargs)
+
+    def get_characters(self, **kwargs):
+        """
+        Returns a full CharacterDataWrapper object this character.
+        :returns:  CharacterDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_characters, **kwargs)
+
+    def get_comics(self, **kwargs):
+        """
+        Returns a full ComicDataWrapper object this character.
+        :returns:  ComicDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_comics, **kwargs)
+
+    def get_events(self, **kwargs):
+        """
+        Returns a full EventDataWrapper object this character.
+        :returns:  EventDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_events, **kwargs)
+
+    def get_series(self, **kwargs):
+        """
+        Returns a full SeriesDataWrapper object this character.
+        :returns:  SeriesDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_series, **kwargs)
+
+    def get_stories(self, **kwargs):
+        """
+        Returns a full StoryDataWrapper object this character.
+        :returns:  StoriesDataWrapper -- A new request to API. Contains full results set.
+        """
+        return self.get_related_resource(self.marvel.get_stories, **kwargs)
+
 class DataWrapper(MarvelObject):
     """
     Base DataWrapper
     """
-
-    def __init__(self, marvel, response, params={}):
-        """
-        :param marvel: Instance of Marvel class
-        :type marvel: marvel.Marvel
-        :param dict: Dict of object, created from json response.
-        :type response: dict
-        :param params: Optional dict of query params sent to original API call
-        :type params: dict
-        
-        """
-        self.marvel = marvel
-        self.dict = response
-        self.params = params
 
     def _next(self, method):
         """
@@ -176,6 +217,25 @@ class DataWrapper(MarvelObject):
         :returns: str
         """
         return self.dict['etag']
+
+    def get_creators(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_creators'))
+
+    def get_characters(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_characters'))
+
+    def get_comics(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_comics'))
+
+    def get_events(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_events'))
+
+    def get_series(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_series'))
+
+    def get_stories(self):
+        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_stories'))
+
 
 class DataContainer(MarvelObject):
     """

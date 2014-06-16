@@ -29,7 +29,6 @@ class Creator(MarvelObject):
     """
     _resource_url = 'creators'
 
-
     @property
     def id(self):
         return int(self.dict['id'])
@@ -123,49 +122,8 @@ class Creator(MarvelObject):
         from .event import EventList
         return EventList(self.marvel, self.dict['events'])
         
-    def get_comics(self, *args, **kwargs):
-        """
-        Returns a full ComicDataWrapper object for this creator.
-        
-        /creators/{creatorId}/comics
-        
-        :returns:  ComicDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .comic import Comic, ComicDataWrapper
-        return self.get_related_resource(Comic, ComicDataWrapper, *args, **kwargs)
-
-    def get_events(self, *args, **kwargs):
-        """
-        Returns a full EventDataWrapper object for this creator.
-
-        /creators/{creatorId}/events
-
-        :returns:  EventDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .event import Event, EventDataWrapper
-        return self.get_related_resource(Event, EventDataWrapper, *args, **kwargs)
-
-    def get_series(self, *args, **kwargs):
-        """
-        Returns a full SeriesDataWrapper object for this creator.
-
-        /creators/{creatorId}/series
-
-        :returns:  SeriesDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .series import Series, SeriesDataWrapper
-        return self.get_related_resource(Series, SeriesDataWrapper, *args, **kwargs)
-
-    def get_stories(self, *args, **kwargs):
-        """
-        Returns a full StoryDataWrapper object for this creator.
-
-        /creators/{creatorId}/stories
-
-        :returns:  StoriesDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .story import Story, StoryDataWrapper
-        return self.get_related_resource(Story, StoryDataWrapper, *args, **kwargs)
+    def get_creators(self):
+        raise AttributeError("'Creator' has no attribute get_creators")
 
 class CreatorList(List):
     """

@@ -39,7 +39,6 @@ class Comic(MarvelObject):
     """
     _resource_url = 'comics'
 
-
     @property
     def id(self):
         return self.dict['id']
@@ -178,51 +177,9 @@ class Comic(MarvelObject):
     def events(self):
         from .event import EventList
         return EventList(self.marvel, self.dict['events'])
-        
-        
-    def get_creators(self, *args, **kwargs):
-        """
-        Returns a full CreatorDataWrapper object for this character.
 
-        /comics/{comicId}/creators
-
-        :returns:  CreatorDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .creator import Creator, CreatorDataWrapper
-        return self.get_related_resource(Creator, CreatorDataWrapper, args, kwargs)
-
-    def get_characters(self, *args, **kwargs):
-        """
-        Returns a full CharacterDataWrapper object for this character.
-
-        /comics/{comicId}/characters
-
-        :returns:  CreatorDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .character import Character, CharacterDataWrapper
-        return self.get_related_resource(Character, CharacterDataWrapper, args, kwargs)
-
-    def get_events(self, *args, **kwargs):
-        """
-        Returns a full EventDataWrapper object this character.
-
-        /comics/{comicID}/events
-
-        :returns:  EventDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .event import Event, EventDataWrapper
-        return self.get_related_resource(Event, EventDataWrapper, args, kwargs)
-        
-    def get_stories(self, *args, **kwargs):
-        """
-        Returns a full StoryDataWrapper object this comic.
-
-        /comics/{comicId}/stories
-
-        :returns:  StoriesDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .story import Story, StoryDataWrapper
-        return self.get_related_resource(Story, StoryDataWrapper, args, kwargs)
+    def get_comics(self):
+        raise AttributeError("'Comic' has no attribute get_comics")
 
 
 class ComicList(List):

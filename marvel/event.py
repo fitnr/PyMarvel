@@ -28,7 +28,6 @@ class Event(MarvelObject):
     """
     _resource_url = 'events'
 
-
     @property
     def id(self):
         return self.dict['id']
@@ -116,61 +115,8 @@ class Event(MarvelObject):
     def previous(self):
         return EventSummary(self.marvel, self.dict['previous'])
 
-
-    def get_creators(self, *args, **kwargs):
-        """
-        Returns a full CreatorDataWrapper object for this event.
-
-        /events/{eventId}/creators
-
-        :returns:  CreatorDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .creator import Creator, CreatorDataWrapper
-        return self.get_related_resource(Creator, CreatorDataWrapper, args, kwargs)
-
-    def get_characters(self, *args, **kwargs):
-        """
-        Returns a full CharacterDataWrapper object for this event.
-
-        /events/{eventId}/characters
-
-        :returns:  CreatorDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .character import Character, CharacterDataWrapper
-        return self.get_related_resource(Character, CharacterDataWrapper, args, kwargs)
-
-    def get_comics(self, *args, **kwargs):
-        """
-        Returns a full ComicDataWrapper object for this event.
-
-        /events/{eventId}/comics
-
-        :returns:  ComicDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .comic import Comic, ComicDataWrapper
-        return self.get_related_resource(Comic, ComicDataWrapper, args, kwargs)
-
-    def get_series(self, *args, **kwargs):
-        """
-        Returns a full SeriesDataWrapper object for this event.
-
-        /events/{eventId}/series
-
-        :returns:  SeriesDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .series import Series, SeriesDataWrapper
-        return self.get_related_resource(Series, SeriesDataWrapper, args, kwargs)
-        
-    def get_stories(self, *args, **kwargs):
-        """
-        Returns a full StoryDataWrapper object for this event.
-
-        /events/{eventId}/stories
-
-        :returns:  StoriesDataWrapper -- A new request to API. Contains full results set.
-        """
-        from .story import Story, StoryDataWrapper
-        return self.get_related_resource(Story, StoryDataWrapper, args, kwargs)
+    def get_events(self):
+        raise AttributeError("'Event' has no attribute get_events")
 
 
 """
