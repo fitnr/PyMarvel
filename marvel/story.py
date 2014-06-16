@@ -10,6 +10,13 @@ class StoryDataWrapper(DataWrapper):
     def data(self):
         return StoryDataContainer(self.marvel, self.dict['data'])
 
+    def next(self):
+        return self._next(self.marvel.get_stories)
+
+    def previous(self):
+        return self._previous(self.marvel.get_stories)
+
+
 class StoryDataContainer(DataContainer):
     @property
     def results(self):

@@ -10,6 +10,12 @@ class EventDataWrapper(DataWrapper):
     def data(self):
         return EventDataContainer(self.marvel, self.dict['data'])
 
+    def next(self):
+        return self._next(self.marvel.get_events)
+
+    def previous(self):
+        return self._previous(self.marvel.get_events)
+
 class EventDataContainer(DataContainer):
     @property
     def results(self):

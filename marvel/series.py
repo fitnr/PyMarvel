@@ -10,6 +10,12 @@ class SeriesDataWrapper(DataWrapper):
     def data(self):
         return SeriesDataContainer(self.marvel, self.dict['data'])
 
+    def next(self):
+        return self._next(self.marvel.get_series)
+
+    def previous(self):
+        return self._previous(self.marvel.get_series)
+
 class SeriesDataContainer(DataContainer):
     @property
     def results(self):

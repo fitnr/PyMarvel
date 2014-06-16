@@ -95,7 +95,7 @@ class DataWrapper(MarvelObject):
         :param marvel: Instance of Marvel class
         :type marvel: marvel.Marvel
         :param dict: Dict of object, created from json response.
-        :type dict: dict
+        :type response: dict
         :param params: Optional dict of query params sent to original API call
         :type params: dict
         
@@ -104,6 +104,51 @@ class DataWrapper(MarvelObject):
         self.dict = response
         self.params = params
 
+    def _next(self, method):
+        """
+        Returns new DataWrapper
+        Returns None if max has been reached
+
+        :param method: A method in the Marvel class to run (e.g. get_comics)
+        :type function
+        """
+
+        # Don't run on a non-successful request
+        if self.code != 200:
+            return
+
+        # Don't run if count is 0
+        if self.data.count == 0:
+            return
+
+        # Don't run if number requested is less than limit requested (at the end)
+        if self.data.count < self.data.limit:
+            return
+
+        params = dict((k, v) for k, v in self.params.items())
+        params['offset'] = self.data.offset + self.data.count
+
+        return method(**params)
+
+    def _previous(self, method):
+        """
+        Returns new DataWrapper
+        returns None if offset is already 0
+
+        :param method: A method in the Marvel class to run (e.g. get_comics)
+        :type function
+        """
+        # Don't run on a non-successful request
+        if self.code != 200:
+            return
+
+        if self.data.offset == 0:
+           return
+
+        params = dict((k, v) for k, v in self.params.items())
+        params['offset'] = max(self.data.offset - self.data.count, 0)
+
+        return method(**params)
 
     @property
     def code(self):
@@ -297,4 +342,3 @@ class Image(MarvelObject):
 
     def __repr__(self):
         return "%s.%s" % (self.path, self.extension)
-

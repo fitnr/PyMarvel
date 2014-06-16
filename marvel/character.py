@@ -11,21 +11,10 @@ class CharacterDataWrapper(DataWrapper):
         return CharacterDataContainer(self.marvel, self.dict['data'])
 
     def next(self):
-        """
-        Returns new CharacterDataWrapper
-        TODO: Don't raise offset past count - limit
-        """
-        self.params['offset'] = str(int(self.params['offset']) + int(self.params['limit']))
-        return self.marvel.get_characters(self.marvel, (), **self.params)
+        return self._next(self.marvel.get_characters)
 
     def previous(self):
-        """
-        Returns new CharacterDataWrapper
-        TODO: Don't lower offset below 0
-        """
-        self.params['offset'] = str(int(self.params['offset']) - int(self.params['limit']))
-        return self.marvel.get_characters(self.marvel, (), **self.params)
-
+        return self._previous(self.marvel.get_characters)
 
 class CharacterDataContainer(DataContainer):
     @property

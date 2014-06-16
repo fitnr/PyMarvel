@@ -10,23 +10,11 @@ class CreatorDataWrapper(DataWrapper):
     def data(self):
         return CreatorDataContainer(self.marvel, self.dict['data'])
 
-    """
     def next(self):
-
-        Returns new CreatorDataWrapper
-        TODO: Don't raise offset past count - limit
-
-        self.params['offset'] = str(int(self.params['offset']) + int(self.params['limit']))
-        return self.marvel.get_characters(self.marvel, (), **self.params)
+        return self._next(self.marvel.get_creators)
 
     def previous(self):
-
-        Returns new CreatorDataWrapper
-        TODO: Don't lower offset below 0
-
-        self.params['offset'] = str(int(self.params['offset']) - int(self.params['limit']))
-        return self.marvel.get_characters(self.marvel, (), **self.params)
-    """
+        return self._previous(self.marvel.get_creators)
 
 class CreatorDataContainer(DataContainer):
     @property
@@ -155,6 +143,7 @@ class Creator(MarvelObject):
         :returns:  EventDataWrapper -- A new request to API. Contains full results set.
         """
         from .event import Event, EventDataWrapper
+        return self.get_related_resource(Event, EventDataWrapper, *args, **kwargs)
 
     def get_series(self, *args, **kwargs):
         """
