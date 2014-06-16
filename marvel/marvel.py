@@ -3,8 +3,6 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-import urllib
-import json
 import hashlib
 import datetime
 
@@ -77,11 +75,8 @@ class Marvel(object):
         return "ts=%s&apikey=%s&hash=%s" % (ts, self.public_key, hash_string)
 
 
-
-
-
     #public methods
-    def get_character(self, id):
+    def get_character(self, id, **kwargs):
         """Fetches a single character by id.
 
         get /v1/public/characters
@@ -127,7 +122,7 @@ class Marvel(object):
         response = json.loads(self._call(Character.resource_url(), self._params(kwargs)).text)
         return CharacterDataWrapper(self, response, kwargs)
 
-    def get_comic(self, id):
+    def get_comic(self, id, **kwargs):
         """Fetches a single comic by id.
         
         get /v1/public/comics/{comicId}
@@ -169,8 +164,7 @@ class Marvel(object):
         response = json.loads(self._call(Comic.resource_url(), self._params(kwargs)).text)
         return ComicDataWrapper(self, response)
         
-        
-    def get_creator(self, id):
+    def get_creator(self, id, **kwargs):
         """Fetches a single creator by id.
 
         get /v1/public/creators/{creatorId}
@@ -192,7 +186,6 @@ class Marvel(object):
         response = json.loads(self._call(url).text)
         return CreatorDataWrapper(self, response)
 
-        
     def get_creators(self, *args, **kwargs):
         """Fetches lists of creators.
         
@@ -211,8 +204,7 @@ class Marvel(object):
         response = json.loads(self._call(Creator.resource_url(), self._params(kwargs)).text)
         return CreatorDataWrapper(self, response)
         
-        
-    def get_event(self, id):
+    def get_event(self, id, **kwargs):
         """Fetches a single event by id.
 
         get /v1/public/event/{eventId}
@@ -231,7 +223,6 @@ class Marvel(object):
         url = "%s/%s" % (Event.resource_url(), id)
         response = json.loads(self._call(url).text)
         return EventDataWrapper(self, response)
-        
         
     def get_events(self, *args, **kwargs):
         """Fetches lists of events.
@@ -255,7 +246,6 @@ class Marvel(object):
         response = json.loads(self._call(Event.resource_url(), self._params(kwargs)).text)
         return EventDataWrapper(self, response)
         
-        
     def get_single_series(self, id):
         """Fetches a single comic series by id.
 
@@ -275,7 +265,6 @@ class Marvel(object):
         url = "%s/%s" % (Series.resource_url(), id)
         response = json.loads(self._call(url).text)
         return SeriesDataWrapper(self, response)
-
 
     def get_series(self, *args, **kwargs):
         """Fetches lists of events.
@@ -317,7 +306,6 @@ class Marvel(object):
         url = "%s/%s" % (Story.resource_url(), id)
         response = json.loads(self._call(url).text)
         return StoryDataWrapper(self, response)
-
 
     def get_stories(self, *args, **kwargs):
         """Fetches lists of stories.

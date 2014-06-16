@@ -3,7 +3,7 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .core import MarvelObject, DataWrapper, DataContainer, Summary, List
+from .core import MarvelObject, DataWrapper, DataContainer, Summary, List, Image
 
 class StoryDataWrapper(DataWrapper):
     @property

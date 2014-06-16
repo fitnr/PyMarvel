@@ -3,8 +3,6 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-import json
-
 from .core import MarvelObject, DataWrapper, DataContainer, List, Summary, TextObject, Image
 
 class ComicDataWrapper(DataWrapper):

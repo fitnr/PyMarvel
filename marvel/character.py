@@ -3,8 +3,6 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-import json
-
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List
 
 class CharacterDataWrapper(DataWrapper):
@@ -34,14 +32,12 @@ class CharacterDataContainer(DataContainer):
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Character)
 
-
 class Character(MarvelObject):
     """
     Character object
     Takes a dict of character attrs
     """
     _resource_url = 'characters'
-
 
     @property
     def id(self):

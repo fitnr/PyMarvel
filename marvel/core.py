@@ -3,7 +3,7 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-import json
+from datetime import datetime
 
 class MarvelObject(object):
     """
@@ -275,7 +275,6 @@ class TextObject(MarvelObject):
         :returns: str
         """
         return self.dict['text']
-        
 
 class Image(MarvelObject):
     @property

@@ -1,5 +1,3 @@
-import json
-import os
 import unittest
 
 from .marvel import Marvel
@@ -10,6 +8,8 @@ from .story import StoryList, StorySummary, Story
 from .event import EventList, EventSummary, Event
 from .comic import ComicDataWrapper, ComicDataContainer, Comic, ComicSummary, ComicDate, ComicPrice
 from .config import *
+
+from datetime import datetime
 
 class PyMarvelTestCase(unittest.TestCase):
 
@@ -215,7 +215,6 @@ class PyMarvelTestCase(unittest.TestCase):
 
         for c in cdw.data.results:
             print "%s - %s" % (c.id, c.title)
-            
 
     def test_get_creator(self):
 
