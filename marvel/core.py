@@ -36,7 +36,7 @@ class MarvelObject(object):
         """
         return cls._resource_url
         
-    def list_to_instance_list(_self, _list, _Class):
+    def list_to_instance_list(self, _list, _Class):
         """
         Takes a list of resource dicts and returns a list
         of resource instances, defined by the _Class param.
@@ -52,10 +52,10 @@ class MarvelObject(object):
         """
         items = []
         for item in _list:
-            items.append(_Class(_self.marvel, item))
+            items.append(_Class(self.marvel, item))
         return items
         
-    def get_related_resource(_self, _Class, _ClassDataWrapper, *args, **kwargs):
+    def get_related_resource(self, _Class, _ClassDataWrapper, *args, **kwargs):
         """
         Takes a related resource Class 
         and returns the related resource DataWrapper.
@@ -72,9 +72,9 @@ class MarvelObject(object):
         
         :returns:  DataWrapper -- DataWrapper for requested Resource
         """
-        url = "%s/%s/%s" % (_self.resource_url(), _self.id, _Class.resource_url())
-        response = _self.marvel._call(url, **kwargs)
-        return _ClassDataWrapper(_self.marvel, response)
+        url = "%s/%s/%s" % (self.resource_url(), self.id, _Class.resource_url())
+        response = self.marvel._call(url, **kwargs)
+        return _ClassDataWrapper(self.marvel, response)
 
     def str_to_datetime(self, _str):
         """

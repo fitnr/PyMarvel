@@ -69,7 +69,6 @@ class Series(MarvelObject):
     def thumbnail(self):
         return Image(self.marvel, self.dict['thumbnail'])
 
-
     @property
     def comics(self):
         from .comic import ComicList

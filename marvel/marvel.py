@@ -44,7 +44,6 @@ class Marvel(object):
         
         :returns:  response -- Requests response
         """
-        
         url = "{0}{1}".format(self._endpoint(), resource_url)
         params.update(self._auth())
         return requests.get(url, params=params).json()

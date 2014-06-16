@@ -101,18 +101,13 @@ class Event(MarvelObject):
     def creators(self):
         from .creator import CreatorList
         return CreatorList(self.marvel, self.dict['creators'])
-
-    @property
-    def series(self):
-        from .series import SeriesList
-        return SeriesList(self.marvel, self.dict['series'])
         
     @property
     def next(self):
         return EventSummary(self.marvel, self.dict['next'])
 
     @property
-    def previoius(self):
+    def previous(self):
         return EventSummary(self.marvel, self.dict['previous'])
 
 
