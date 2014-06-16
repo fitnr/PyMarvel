@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List
 
+
 class CharacterDataWrapper(DataWrapper):
+
     @property
     def data(self):
         return CharacterDataContainer(self.marvel, self.dict['data'])
@@ -16,12 +18,16 @@ class CharacterDataWrapper(DataWrapper):
     def previous(self):
         return self._previous(self.marvel.get_characters)
 
+
 class CharacterDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Character)
 
+
 class Character(MarvelObject):
+
     """
     Character object
     Takes a dict of character attrs
@@ -72,7 +78,7 @@ class Character(MarvelObject):
 
     @property
     def thumbnail(self):
-        return "%s.%s" % (self.dict['thumbnail']['path'], self.dict['thumbnail']['extension'] )
+        return "%s.%s" % (self.dict['thumbnail']['path'], self.dict['thumbnail']['extension'])
 
     @property
     def comics(self):
@@ -111,6 +117,7 @@ class Character(MarvelObject):
 
 
 class CharacterList(List):
+
     """
     CharacterList object
     """
@@ -121,7 +128,9 @@ class CharacterList(List):
         """
         return self.list_to_instance_list(self.dict['items'], CharacterSummary)
 
+
 class CharacterSummary(Summary):
+
     """
     CharacterSummary object
     """

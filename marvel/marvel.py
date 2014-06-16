@@ -17,7 +17,9 @@ from .story import StoryDataWrapper, Story
 
 DEFAULT_API_VERSION = 'v1'
 
+
 class Marvel(object):
+
     """Marvel API class
 
     This class provides methods to interface with the Marvel API
@@ -29,7 +31,7 @@ class Marvel(object):
     def __init__(self, public_key, private_key):
         self.public_key = public_key
         self.private_key = private_key
-        
+
     def _endpoint(self):
         return "http://gateway.marvel.com/%s/public/" % (DEFAULT_API_VERSION)
 
@@ -55,7 +57,8 @@ class Marvel(object):
         :returns:  str -- URL encoded query parameters containing "ts", "apikey", and "hash"
         """
         ts = datetime.datetime.now().strftime("%Y-%m-%d%H:%M:%S")
-        hash_string = hashlib.md5("%s%s%s" % (ts, self.private_key, self.public_key)).hexdigest()
+        hash_string = hashlib.md5(
+            "%s%s%s" % (ts, self.private_key, self.public_key)).hexdigest()
         auth = {
             'ts': ts,
             'apikey': self.public_key,
@@ -63,8 +66,7 @@ class Marvel(object):
         }
         return auth
 
-
-    #public methods
+    # public methods
     def get_character(self, id, **kwargs):
         """Fetches a single character by id.
 
@@ -86,7 +88,7 @@ class Marvel(object):
         url = "%s/%s" % (Character.resource_url(), id)
         response = self._call(url)
         return CharacterDataWrapper(self, response, **kwargs)
-        
+
     def get_characters(self, **kwargs):
         """Fetches lists of comic characters with optional filters.
 
@@ -107,7 +109,7 @@ class Marvel(object):
         Akemi
         
         """
-        #pass url string and params string to _call
+        # pass url string and params string to _call
         response = self._call(Character.resource_url(), **kwargs)
         return CharacterDataWrapper(self, response, **kwargs)
 
@@ -128,11 +130,11 @@ class Marvel(object):
         >>> print cdw.data.result.name
         Some Comic
         """
-        
+
         url = "%s/%s" % (Comic.resource_url(), id)
         response = self._call(url)
         return ComicDataWrapper(self, response, **kwargs)
-                
+
     def get_comics(self, **kwargs):
         """
         Fetches list of comics.
@@ -152,7 +154,7 @@ class Marvel(object):
 
         response = self._call(Comic.resource_url(), **kwargs)
         return ComicDataWrapper(self, response, **kwargs)
-        
+
     def get_creator(self, id, **kwargs):
         """Fetches a single creator by id.
 
@@ -189,10 +191,10 @@ class Marvel(object):
         >>> print cdw.data.results[0].fullName
         Alvin Lee
         """
-        
+
         response = self._call(Creator.resource_url(), **kwargs)
         return CreatorDataWrapper(self, response, **kwargs)
-        
+
     def get_event(self, id, **kwargs):
         """Fetches a single event by id.
 
@@ -212,7 +214,7 @@ class Marvel(object):
         url = "%s/%s" % (Event.resource_url(), id)
         response = self._call(url)
         return EventDataWrapper(self, response, **kwargs)
-        
+
     def get_events(self, **kwargs):
         """Fetches lists of events.
 
@@ -234,7 +236,7 @@ class Marvel(object):
 
         response = self._call(Event.resource_url(), **kwargs)
         return EventDataWrapper(self, response, **kwargs)
-        
+
     def get_single_series(self, id):
         """Fetches a single comic series by id.
 

@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List
 
+
 class CreatorDataWrapper(DataWrapper):
+
     @property
     def data(self):
         return CreatorDataContainer(self.marvel, self.dict['data'])
@@ -16,13 +18,16 @@ class CreatorDataWrapper(DataWrapper):
     def previous(self):
         return self._previous(self.marvel.get_creators)
 
+
 class CreatorDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Creator)
 
 
 class Creator(MarvelObject):
+
     """
     Creator object
     Takes a dict of creator attrs
@@ -52,7 +57,6 @@ class Creator(MarvelObject):
     @property
     def fullName(self):
         return self.dict['fullName']
-
 
     @property
     def modified(self):
@@ -88,7 +92,7 @@ class Creator(MarvelObject):
 
     @property
     def thumbnail(self):
-        return "%s.%s" % (self.dict['thumbnail']['path'], self.dict['thumbnail']['extension'] )
+        return "%s.%s" % (self.dict['thumbnail']['path'], self.dict['thumbnail']['extension'])
 
     @property
     def series(self):
@@ -121,11 +125,13 @@ class Creator(MarvelObject):
         """
         from .event import EventList
         return EventList(self.marvel, self.dict['events'])
-        
+
     def get_creators(self):
         raise AttributeError("'Creator' has no attribute get_creators")
 
+
 class CreatorList(List):
+
     """
     CreatorList object
     """
@@ -137,11 +143,13 @@ class CreatorList(List):
         """
         return self.list_to_instance_list(self.dict['items'], CreatorSummary)
 
+
 class CreatorSummary(Summary):
+
     """
     CreatorSummary object
     """
-        
+
     @property
     def role(self):
         return self.dict['role']

@@ -11,38 +11,38 @@ from .config import *
 
 from datetime import datetime
 
+
 class PyMarvelTestCase(unittest.TestCase):
 
     def setUp(self):
         self.m = Marvel(PUBLIC_KEY, PRIVATE_KEY)
-        
-        #Character
+
+        # Character
         self.character_dw = self.m.get_character(1009718)
         self.character = self.character_dw.data.result
-        
-        #Comic
-        #TODO: Need a comic with everything
+
+        # Comic
+        # TODO: Need a comic with everything
         self.comic_dw = self.m.get_comic(17731)
         self.comic = self.comic_dw.data.result
-                
-        #Creators
-        #Grab Stan the Man
+
+        # Creators
+        # Grab Stan the Man
         self.creator_dw = self.m.get_creator(30)
         self.creator = self.creator_dw.data.result
 
-        #Series
+        # Series
         self.series_dw = self.m.get_single_series(12429)
         self.series = self.series_dw.data.result
 
-        #Story
+        # Story
         self.story_dw = self.m.get_story(29)
         self.story = self.story_dw.data.result
-
 
     def tearDown(self):
         pass
 
-    #Character Tests
+    # Character Tests
     def test_get_character(self):
 
         assert self.character_dw.code == 200
@@ -58,16 +58,17 @@ class PyMarvelTestCase(unittest.TestCase):
 
         assert comic_dw.code == 200
         assert comic_dw.status == 'Ok'
-        
+
         print "\nCharacter.get_comics(): \n"
         for c in comic_dw.data.results:
             print "%s - %s" % (c.id, c.title)
 
-        comic_dw_params = self.character.get_comics(format="comic", formatType="comic", hasDigitalIssue=True, orderBy="title", limit=10, offset=30)
+        comic_dw_params = self.character.get_comics(
+            format="comic", formatType="comic", hasDigitalIssue=True, orderBy="title", limit=10, offset=30)
 
         assert comic_dw_params.code == 200
         assert comic_dw_params.status == 'Ok'
-        
+
         print "\nCharacter.get_comics(params): \n"
         for c in comic_dw_params.data.results:
             print "%s - %s" % (c.id, c.title)
@@ -83,7 +84,8 @@ class PyMarvelTestCase(unittest.TestCase):
         for e in events_dw.data.results:
             print "%s - %s" % (e.id, e.title)
 
-        events_dw_params = self.character.get_events(orderBy="startDate", limit=10)
+        events_dw_params = self.character.get_events(
+            orderBy="startDate", limit=10)
 
         assert events_dw_params.code == 200
         assert events_dw_params.status == 'Ok'
@@ -93,8 +95,9 @@ class PyMarvelTestCase(unittest.TestCase):
             print "%s - %s" % (e.id, e.title)
 
     def test_get_characters(self):
-        
-        characters_dw = self.m.get_characters(orderBy="name,-modified", limit="10", offset="15")
+
+        characters_dw = self.m.get_characters(
+            orderBy="name,-modified", limit="10", offset="15")
 
         assert characters_dw.code == 200
         assert characters_dw.status == 'Ok'
@@ -113,18 +116,19 @@ class PyMarvelTestCase(unittest.TestCase):
             print "%s - %s" % (c.id, c.name)
 
     def test_get_characters_next(self):
-        
-        characters_dw = self.m.get_characters(orderBy="name,-modified", limit="10")
+
+        characters_dw = self.m.get_characters(
+            orderBy="name,-modified", limit="10")
         new_cdw = characters_dw.next()
 
         assert new_cdw.code == 200
 
-        #poor test?
-        assert new_cdw.data.offset == characters_dw.data.offset + characters_dw.data.limit
+        # poor test?
+        assert new_cdw.data.offset == characters_dw.data.offset + \
+            characters_dw.data.limit
         assert new_cdw.data.total == characters_dw.data.total
 
-
-    #Comic Tests
+    # Comic Tests
     def test_get_comic(self):
 
         assert self.comic_dw.code == 200
@@ -138,42 +142,46 @@ class PyMarvelTestCase(unittest.TestCase):
         assert type(self.comic_dw.data) is ComicDataContainer
         assert type(self.comic_dw.data.results) is list
 
-        #properties
-        #textObjects
+        # properties
+        # textObjects
         #assert len(self.comic_dw.data.result.textObjects) > 0
         #assert isinstance(self.comic_dw.data.result.textObjects[0], TextObject)
-        #collections
-        assert isinstance(self.comic_dw.data.result.collections[0], ComicSummary)
-        #prices/dates
+        # collections
+        assert isinstance(
+            self.comic_dw.data.result.collections[0], ComicSummary)
+        # prices/dates
         assert isinstance(self.comic_dw.data.result.prices[0], ComicPrice)
         assert isinstance(self.comic_dw.data.result.dates[0], ComicDate)
-        #images
+        # images
         assert isinstance(self.comic_dw.data.result.thumbnail, Image)
         assert isinstance(self.comic_dw.data.result.images[0], Image)
-        #lists
+        # lists
         assert isinstance(self.comic_dw.data.result.creators, CreatorList)
-        assert isinstance(self.comic_dw.data.result.creators.items[0], CreatorSummary)
+        assert isinstance(
+            self.comic_dw.data.result.creators.items[0], CreatorSummary)
         assert isinstance(self.comic_dw.data.result.characters, CharacterList)
-        assert isinstance(self.comic_dw.data.result.characters.items[0], CharacterSummary)
+        assert isinstance(
+            self.comic_dw.data.result.characters.items[0], CharacterSummary)
         assert isinstance(self.comic_dw.data.result.stories, StoryList)
-        assert isinstance(self.comic_dw.data.result.stories.items[0], StorySummary)
-        #TODO: Need a test case with an Event
+        assert isinstance(
+            self.comic_dw.data.result.stories.items[0], StorySummary)
+        # TODO: Need a test case with an Event
         #assert isinstance(cdw.data.result.events, EventList)
         #assert isinstance(cdw.data.result.events.items[0], EventSummary)
 
-
         print "\nMarvel.get_comic(): \n"
         print self.comic.title
-
 
     def test_parse_date(self):
 
         cdw = self.m.get_comics(dateRange='2013-03-13,2013-03-13', limit=1)
 
-        assert cdw.data.results[0].dates[0].date == datetime.strptime(cdw.data.results[0].dates[0].date_raw[:-5], '%Y-%m-%dT%H:%M:%S')
+        assert cdw.data.results[0].dates[0].date == datetime.strptime(
+            cdw.data.results[0].dates[0].date_raw[:-5], '%Y-%m-%dT%H:%M:%S')
         assert cdw.data.results[0].dates[0].type == u'onsaleDate'
 
-        assert cdw.data.results[0].modified == datetime.strptime(cdw.data.results[0].modified_raw[:-5], '%Y-%m-%dT%H:%M:%S')
+        assert cdw.data.results[0].modified == datetime.strptime(
+            cdw.data.results[0].modified_raw[:-5], '%Y-%m-%dT%H:%M:%S')
 
         print "Checked dates.\n"
 
@@ -197,9 +205,9 @@ class PyMarvelTestCase(unittest.TestCase):
         for e in events_dw_params.data.results:
             print "%s - %s" % (e.id, e.title)
 
-        
     def test_get_comics(self):
-        cdw = self.m.get_comics(orderBy="issueNumber,-modified", limit="10", offset="15")
+        cdw = self.m.get_comics(
+            orderBy="issueNumber,-modified", limit="10", offset="15")
 
         assert cdw.code == 200
         assert cdw.status == 'Ok'
@@ -224,21 +232,22 @@ class PyMarvelTestCase(unittest.TestCase):
         assert self.creator.lastName == "Lee"
 
     def test_creator_get_comics(self):
-        
+
         comic_dw = self.creator.get_comics()
 
         assert comic_dw.code == 200
         assert comic_dw.status == 'Ok'
-        
+
         print "\nCreator.get_comics(): \n"
         for c in comic_dw.data.results:
             print "%s - %s" % (c.id, c.title)
 
-        comic_dw_params = self.creator.get_comics(format="comic", formatType="comic", hasDigitalIssue=True, orderBy="title", limit=10, offset=30)
+        comic_dw_params = self.creator.get_comics(
+            format="comic", formatType="comic", hasDigitalIssue=True, orderBy="title", limit=10, offset=30)
 
         assert comic_dw_params.code == 200
         assert comic_dw_params.status == 'Ok'
-        
+
         print "\nCreator.get_comics(params): \n"
         for c in comic_dw_params.data.results:
             print "%s - %s" % (c.id, c.title)
@@ -263,14 +272,11 @@ class PyMarvelTestCase(unittest.TestCase):
         for e in events_dw_params.data.results:
             print "%s - %s" % (e.id, e.title)
 
-
-
-
     def test_get_event(self):
         event_dw = self.m.get_event(253)
 
         assert event_dw.code == 200
-        assert event_dw.status == 'Ok'        
+        assert event_dw.status == 'Ok'
 
         print "\nMarvel.get_event: \n"
         event = event_dw.data.result
@@ -278,7 +284,6 @@ class PyMarvelTestCase(unittest.TestCase):
         assert event.title == "Infinity Gauntlet"
         print event.title
         print event.description
-
 
     def test_get_events(self):
         response = self.m.get_events(characters="1009351,1009718")
@@ -300,7 +305,7 @@ class PyMarvelTestCase(unittest.TestCase):
 
         print "\nMarvel.get_single_series(): \n"
         print self.series.title
-        
+
     def test_get_series(self):
 
         response = self.m.get_series(characters="1009718", limit=10)
@@ -314,18 +319,17 @@ class PyMarvelTestCase(unittest.TestCase):
         for s in response.data.results:
             print "%s" % s.title
 
-
     def test_get_story(self):
-        
+
         assert self.story_dw.code == 200
-        assert self.story_dw.status == 'Ok'        
+        assert self.story_dw.status == 'Ok'
 
         print "\nMarvel.get_story(): \n"
         assert isinstance(self.story, Story)
         print self.story.title
 
     def test_get_stories(self):
-        
+
         response = self.m.get_stories(characters="1009351,1009718", limit=10)
 
         assert response.code == 200
@@ -336,13 +340,13 @@ class PyMarvelTestCase(unittest.TestCase):
         for s in response.data.results:
             print "%s" % s.title
 
-
     def test_chain(self):
         print "\nMethod Chaining:\n"
-        event = self.m.get_series(characters="1009718").data.result.get_characters().data.results[1].get_comics().data.results[0].get_creators().data.results[0].get_events().data.results[0]
+        event = self.m.get_series(characters="1009718").data.result.get_characters().data.results[
+            1].get_comics().data.results[0].get_creators().data.results[0].get_events().data.results[0]
         assert isinstance(event, Event)
         print event.title
-        
+
 if __name__ == '__main__':
     unittest.main()
 

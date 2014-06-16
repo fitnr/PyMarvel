@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from datetime import datetime
 
+
 class MarvelObject(object):
+
     """
     Base class for all Marvel API classes
     """
@@ -18,7 +20,7 @@ class MarvelObject(object):
         :type response: dict
         :param params: Optional dict of query params sent to original API call
         :type params: dict
-        
+
         """
         self.marvel = marvel
         self.dict = response or dict()
@@ -32,20 +34,20 @@ class MarvelObject(object):
             return self.dict['name']
         except:
             return self.dict['title']
-    
+
     def to_dict(self):
         """
         :returns:  dict -- Dictionary representation of the Resource
         """
         return self.dict
-        
+
     @classmethod
     def resource_url(cls):
         """
         :returns:  str -- Resource URL
         """
         return cls._resource_url
-        
+
     def list_to_instance_list(self, _list, _Class):
         """
         Takes a list of resource dicts and returns a list
@@ -57,7 +59,7 @@ class MarvelObject(object):
         :type _list: list
         :param _Class: The Resource class to create a list of (Comic, Creator, etc).
         :type _Class: core.MarvelObject
-        
+
         :returns:  list -- List of Resource instances (Comic, Creator, etc).
         """
         items = []
@@ -67,7 +69,7 @@ class MarvelObject(object):
 
     def get_related_resource(self, method, **kwargs):
         """
-        Takes a related resource Class 
+        Takes a related resource Class
         and returns the related resource DataWrapper.
         For Example: Given a Character instance, return
         a ComicsDataWrapper related to that character.
@@ -77,7 +79,7 @@ class MarvelObject(object):
         :type method:
         :param kwargs: dict of query params for the API
         :type kwargs: dict
-        
+
         :returns:  DataWrapper -- DataWrapper for requested Resource
         """
         # Copy params
@@ -92,10 +94,10 @@ class MarvelObject(object):
     def str_to_datetime(self, _str):
         """
         Converts '2013-11-20T17:40:18-0500' format to 'datetime' object
-        
+
         :returns: datetime
         """
-        #Hacked off %z timezone because reasons
+        # Hacked off %z timezone because reasons
         return datetime.strptime(_str[:-5], '%Y-%m-%dT%H:%M:%S')
 
     def get_creators(self, **kwargs):
@@ -140,7 +142,9 @@ class MarvelObject(object):
         """
         return self.get_related_resource(self.marvel.get_stories, **kwargs)
 
+
 class DataWrapper(MarvelObject):
+
     """
     Base DataWrapper
     """
@@ -162,7 +166,8 @@ class DataWrapper(MarvelObject):
         if self.data.count == 0:
             return
 
-        # Don't run if number requested is less than limit requested (at the end)
+        # Don't run if number requested is less than limit requested (at the
+        # end)
         if self.data.count < self.data.limit:
             return
 
@@ -184,7 +189,7 @@ class DataWrapper(MarvelObject):
             return
 
         if self.data.offset == 0:
-           return
+            return
 
         params = dict((k, v) for k, v in self.params.items())
         params['offset'] = max(self.data.offset - self.data.count, 0)
@@ -195,7 +200,7 @@ class DataWrapper(MarvelObject):
     def code(self):
         """
         The HTTP status code of the returned result.
-        
+
         :returns: int
         """
         return int(self.dict['code'])
@@ -204,7 +209,7 @@ class DataWrapper(MarvelObject):
     def status(self):
         """
         A string description of the call status.
-        
+
         :returns: str
         """
         return self.dict['status']
@@ -213,31 +218,38 @@ class DataWrapper(MarvelObject):
     def etag(self):
         """
         A digest value of the content returned by the call.
-        
+
         :returns: str
         """
         return self.dict['etag']
 
     def get_creators(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_creators'))
+        raise AttributeError('"{0}" has no attribute {1}'.format(
+            self.__class__.__name__, 'get_creators'))
 
     def get_characters(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_characters'))
+        raise AttributeError('"{0}" has no attribute {1}'.format(
+            self.__class__.__name__, 'get_characters'))
 
     def get_comics(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_comics'))
+        raise AttributeError(
+            '"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_comics'))
 
     def get_events(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_events'))
+        raise AttributeError(
+            '"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_events'))
 
     def get_series(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_series'))
+        raise AttributeError(
+            '"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_series'))
 
     def get_stories(self):
-        raise AttributeError('"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_stories'))
+        raise AttributeError(
+            '"{0}" has no attribute {1}'.format(self.__class__.__name__, 'get_stories'))
 
 
 class DataContainer(MarvelObject):
+
     """
     Base DataContainer
     """
@@ -256,7 +268,7 @@ class DataContainer(MarvelObject):
     def offset(self):
         """
         The requested offset (number of skipped results) of the call.
-        
+
         :returns: int
         """
         return int(self.dict['offset'])
@@ -265,7 +277,7 @@ class DataContainer(MarvelObject):
     def limit(self):
         """
         The requested result limit.
-        
+
         :returns: int
         """
         return int(self.dict['limit'])
@@ -274,16 +286,16 @@ class DataContainer(MarvelObject):
     def total(self):
         """
         The total number of resources available given the current filter set.
-        
+
         :returns: int
         """
         return int(self.dict['total'])
-    
+
     @property
     def count(self):
         """
         The total number of results returned by this call.
-        
+
         :returns: int
         """
         return int(self.dict['count'])
@@ -293,12 +305,14 @@ class DataContainer(MarvelObject):
         """
         Returns the first item in the results list.
         Useful for methods that should return only one results.
-        
+
         :returns: marvel.MarvelObject
         """
         return self.results[0]
 
+
 class List(MarvelObject):
+
     """
     Base List object
     """
@@ -307,7 +321,7 @@ class List(MarvelObject):
     def available(self):
         """
         The number of total available resources in this list. Will always be greater than or equal to the "returned" value.
-        
+
         :returns: int
         """
         return int(self.dict['available'])
@@ -316,7 +330,7 @@ class List(MarvelObject):
     def returned(self):
         """
         The number of resources returned in this collection (up to 20).
-        
+
         :returns: int
         """
         return int(self.dict['returned'])
@@ -325,12 +339,14 @@ class List(MarvelObject):
     def collectionURI(self):
         """
         The path to the full list of resources in this collection.
-        
+
         :returns: str
         """
         return self.dict['collectionURI']
-        
+
+
 class Summary(MarvelObject):
+
     """
     Base Summary object
     """
@@ -339,7 +355,7 @@ class Summary(MarvelObject):
     def resourceURI(self):
         """
         The path to the individual resource.
-        
+
         :returns: str
         """
         return self.dict['resourceURI']
@@ -348,17 +364,19 @@ class Summary(MarvelObject):
     def name(self):
         """
         The canonical name of the resource.
-        
+
         :returns: str
         """
         return self.dict['name']
-        
+
+
 class TextObject(MarvelObject):
+
     @property
     def type(self):
         """
         The canonical type of the text object (e.g. solicit text, preview text, etc.).
-        
+
         :returns: str
         """
         return self.dict['type']
@@ -367,7 +385,7 @@ class TextObject(MarvelObject):
     def language(self):
         """
         The IETF language tag denoting the language the text object is written in.
-        
+
         :returns: str
         """
         return self.dict['language']
@@ -376,17 +394,19 @@ class TextObject(MarvelObject):
     def text(self):
         """
         The text.
-        
+
         :returns: str
         """
         return self.dict['text']
 
+
 class Image(MarvelObject):
+
     @property
     def path(self):
         """
         The directory path of to the image.
-        
+
         :returns: str
         """
         return self.dict['path']
@@ -395,7 +415,7 @@ class Image(MarvelObject):
     def extension(self):
         """
         The file extension for the image.
-        
+
         :returns: str
         """
         return self.dict['extension']

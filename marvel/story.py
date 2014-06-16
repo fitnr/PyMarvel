@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List, Image
 
+
 class StoryDataWrapper(DataWrapper):
+
     @property
     def data(self):
         return StoryDataContainer(self.marvel, self.dict['data'])
@@ -18,11 +20,14 @@ class StoryDataWrapper(DataWrapper):
 
 
 class StoryDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Story)
 
+
 class Story(MarvelObject):
+
     """
     Story object
     Takes a dict of character attrs
@@ -99,6 +104,7 @@ class Story(MarvelObject):
 
 
 class StoryList(List):
+
     """
     StoryList object
     """
@@ -110,7 +116,9 @@ class StoryList(List):
         """
         return self.list_to_instance_list(self.dict['items'], StorySummary)
 
+
 class StorySummary(Summary):
+
     """
     StorySummary object
     """

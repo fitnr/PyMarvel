@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, List, Summary, TextObject, Image
 
+
 class ComicDataWrapper(DataWrapper):
+
     """
     :param marvel: Instance of Marvel class
     :type marvel: marvel.Marvel
@@ -25,12 +27,16 @@ class ComicDataWrapper(DataWrapper):
     def previous(self):
         return self._previous(self.marvel.get_comics)
 
+
 class ComicDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Comic)
 
+
 class Comic(MarvelObject):
+
     """
     :param marvel: Instance of Marvel class
     :type marvel: marvel.Marvel
@@ -127,7 +133,7 @@ class Comic(MarvelObject):
         Returns List of ComicSummary objects
         """
         return self.list_to_instance_list(self.dict['variants'], ComicSummary)
-                    
+
     @property
     def collections(self):
         """
@@ -172,7 +178,7 @@ class Comic(MarvelObject):
     def stories(self):
         from .story import StoryList
         return StoryList(self.marvel, self.dict['stories'])
-        
+
     @property
     def events(self):
         from .event import EventList
@@ -183,6 +189,7 @@ class Comic(MarvelObject):
 
 
 class ComicList(List):
+
     """
     ComicList object
     """
@@ -194,12 +201,16 @@ class ComicList(List):
         """
         return self.list_to_instance_list(self.dict['items'], ComicSummary)
 
+
 class ComicSummary(Summary):
+
     """
     CommicSummary object
     """
 
+
 class ComicDate(MarvelObject):
+
     """
     ComicDate object
     """
@@ -213,10 +224,11 @@ class ComicDate(MarvelObject):
 
     @property
     def date_raw(self):
-        return self.dict['date']        
+        return self.dict['date']
 
 
 class ComicPrice(MarvelObject):
+
     """
     ComicPrice object
     """

@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List, Image
 
+
 class EventDataWrapper(DataWrapper):
+
     @property
     def data(self):
         return EventDataContainer(self.marvel, self.dict['data'])
@@ -16,12 +18,16 @@ class EventDataWrapper(DataWrapper):
     def previous(self):
         return self._previous(self.marvel.get_events)
 
+
 class EventDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Event)
 
+
 class Event(MarvelObject):
+
     """
     Event object
     Takes a dict of character attrs
@@ -106,7 +112,7 @@ class Event(MarvelObject):
     def creators(self):
         from .creator import CreatorList
         return CreatorList(self.marvel, self.dict['creators'])
-        
+
     @property
     def next(self):
         return EventSummary(self.marvel, self.dict['next'])
@@ -142,6 +148,7 @@ class Event(MarvelObject):
 
 
 class EventList(List):
+
     """
     EventList object
     """
@@ -153,7 +160,9 @@ class EventList(List):
         """
         return self.list_to_instance_list(self.dict['items'], EventSummary)
 
+
 class EventSummary(Summary):
+
     """
     EventSummary object
     """

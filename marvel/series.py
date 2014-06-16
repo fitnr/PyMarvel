@@ -5,7 +5,9 @@ __date__ = '02/07/14'
 
 from .core import MarvelObject, DataWrapper, DataContainer, Summary, List, Image
 
+
 class SeriesDataWrapper(DataWrapper):
+
     @property
     def data(self):
         return SeriesDataContainer(self.marvel, self.dict['data'])
@@ -16,12 +18,16 @@ class SeriesDataWrapper(DataWrapper):
     def previous(self):
         return self._previous(self.marvel.get_series)
 
+
 class SeriesDataContainer(DataContainer):
+
     @property
     def results(self):
         return self.list_to_instance_list(self.dict['results'], Series)
 
+
 class Series(MarvelObject):
+
     """
     Series object
     Takes a dict of character attrs
@@ -54,7 +60,7 @@ class Series(MarvelObject):
     @property
     def startYear(self):
         return int(self.dict['startYear'])
-    
+
     @property
     def endYear(self):
         return int(self.dict['endYear'])
@@ -107,12 +113,13 @@ class Series(MarvelObject):
     @property
     def previous(self):
         return SeriesSummary(self.marvel, self.dict['previous'])
-        
+
     def get_series(self):
         raise AttributeError("'Series' has no attribute get_series")
 
 
 class SeriesList(List):
+
     """
     SeriesList object
     """
@@ -124,7 +131,9 @@ class SeriesList(List):
         """
         return self.list_to_instance_list(self.dict['items'], SeriesSummary)
 
+
 class SeriesSummary(Summary):
+
     """
     SeriesSummary object
     """
