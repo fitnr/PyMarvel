@@ -114,16 +114,14 @@ class PyMarvelTestCase(unittest.TestCase):
 
     def test_get_characters_next(self):
         
-        characters_dw = self.m.get_characters(orderBy="name,-modified", limit="10", offset="15")
+        characters_dw = self.m.get_characters(orderBy="name,-modified", limit="10")
         new_cdw = characters_dw.next()
 
         assert new_cdw.code == 200
 
         #poor test?
         assert new_cdw.data.offset == characters_dw.data.offset + characters_dw.data.limit
-
-
-
+        assert new_cdw.data.total == characters_dw.data.total
 
 
     #Comic Tests
@@ -167,6 +165,17 @@ class PyMarvelTestCase(unittest.TestCase):
         print "\nMarvel.get_comic(): \n"
         print self.comic.title
 
+
+    def test_parse_date(self):
+
+        cdw = self.m.get_comics(dateRange='2013-03-13,2013-03-13', limit=1)
+
+        assert cdw.data.results[0].dates[0].date == datetime.strptime(cdw.data.results[0].dates[0].date_raw[:-5], '%Y-%m-%dT%H:%M:%S')
+        assert cdw.data.results[0].dates[0].type == u'onsaleDate'
+
+        assert cdw.data.results[0].modified == datetime.strptime(cdw.data.results[0].modified_raw[:-5], '%Y-%m-%dT%H:%M:%S')
+
+        print "Checked dates.\n"
 
     def test_comic_get_events(self):
 

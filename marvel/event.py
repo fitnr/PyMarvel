@@ -48,7 +48,7 @@ class Event(MarvelObject):
 
     @property
     def modified(self):
-        return str_to_datetime(self.dict['modified'])
+        return self.str_to_datetime(self.dict['modified'])
 
     @property
     def modified_raw(self):
@@ -56,7 +56,7 @@ class Event(MarvelObject):
 
     @property
     def start(self):
-        return str_to_datetime(self.dict['start'])
+        return self.str_to_datetime(self.dict['start'])
 
     @property
     def start_raw(self):
@@ -64,7 +64,7 @@ class Event(MarvelObject):
 
     @property
     def end(self):
-        return str_to_datetime(self.dict['end'])
+        return self.str_to_datetime(self.dict['end'])
 
     @property
     def end_raw(self):

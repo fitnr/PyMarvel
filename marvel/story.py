@@ -47,7 +47,7 @@ class Story(MarvelObject):
 
     @property
     def modified(self):
-        return str_to_datetime(self.dict['modified'])
+        return self.str_to_datetime(self.dict['modified'])
 
     @property
     def modified_raw(self):

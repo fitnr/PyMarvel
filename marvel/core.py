@@ -75,7 +75,16 @@ class MarvelObject(object):
         url = "%s/%s/%s" % (_self.resource_url(), _self.id, _Class.resource_url())
         response = json.loads(_self.marvel._call(url, _self.marvel._params(kwargs)).text)
         return _ClassDataWrapper(_self.marvel, response)
+
+    def str_to_datetime(self, _str):
+        """
+        Converts '2013-11-20T17:40:18-0500' format to 'datetime' object
         
+        :returns: datetime
+        """
+        #Hacked off %z timezone because reasons
+        return datetime.strptime(_str[:-5], '%Y-%m-%dT%H:%M:%S')
+
 class DataWrapper(MarvelObject):
     """
     Base DataWrapper
@@ -184,17 +193,6 @@ class DataContainer(MarvelObject):
         """
         return self.results[0]
 
-        
-    def str_to_datetime(self, _str):
-        """
-        Converts '2013-11-20T17:40:18-0500' format to 'datetime' object
-        
-        :returns: datetime
-        """
-        #Hacked off %z timezone because reasons
-        return datetime.strptime(_str[:-6], '%Y-%m-%dT%H:%M:%S')
-        
-        
 class List(MarvelObject):
     """
     Base List object

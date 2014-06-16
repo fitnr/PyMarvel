@@ -65,7 +65,7 @@ class Comic(MarvelObject):
 
     @property
     def modified(self):
-        return str_to_datetime(self.dict['modified'])
+        return self.str_to_datetime(self.dict['modified'])
 
     @property
     def modified_raw(self):
@@ -249,6 +249,11 @@ class ComicDate(MarvelObject):
     @property
     def date(self):
         return self.str_to_datetime(self.dict['date'])
+
+    @property
+    def date_raw(self):
+        return self.dict['date']        
+
 
 class ComicPrice(MarvelObject):
     """
