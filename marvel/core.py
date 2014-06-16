@@ -73,7 +73,7 @@ class MarvelObject(object):
         :returns:  DataWrapper -- DataWrapper for requested Resource
         """
         url = "%s/%s/%s" % (_self.resource_url(), _self.id, _Class.resource_url())
-        response = json.loads(_self.marvel._call(url, _self.marvel._params(kwargs)).text)
+        response = _self.marvel._call(url, **kwargs)
         return _ClassDataWrapper(_self.marvel, response)
 
     def str_to_datetime(self, _str):
@@ -90,7 +90,7 @@ class DataWrapper(MarvelObject):
     Base DataWrapper
     """
 
-    def __init__(self, marvel, dict, params=None):
+    def __init__(self, marvel, response, params={}):
         """
         :param marvel: Instance of Marvel class
         :type marvel: marvel.Marvel
@@ -101,7 +101,7 @@ class DataWrapper(MarvelObject):
         
         """
         self.marvel = marvel
-        self.dict = dict
+        self.dict = response
         self.params = params
 
 
@@ -137,7 +137,7 @@ class DataContainer(MarvelObject):
     Base DataContainer
     """
 
-    def __init__(self, marvel, dict):
+    def __init__(self, marvel, response):
         """
         :param marvel: Instance of Marvel class
         :type marvel: marvel.Marvel
@@ -145,7 +145,7 @@ class DataContainer(MarvelObject):
         :type dict: dict
         """
         self.marvel = marvel
-        self.dict = dict
+        self.dict = response
 
     @property
     def offset(self):

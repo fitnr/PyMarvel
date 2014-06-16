@@ -33,7 +33,7 @@ class Marvel(object):
     def _endpoint(self):
         return "http://gateway.marvel.com/%s/public/" % (DEFAULT_API_VERSION)
 
-    def _call(self, resource_url, params=None):
+    def _call(self, resource_url, **params):
         """
         Calls the Marvel API endpoint
 
@@ -45,24 +45,9 @@ class Marvel(object):
         :returns:  response -- Requests response
         """
         
-        url = "%s%s" % (self._endpoint(), resource_url)
-        if params:
-            url += "?%s&%s" % (params, self._auth())
-        else:
-            url += "?%s" % self._auth()
-        return requests.get(url)
-
-    def _params(self, params):
-        """
-        Takes dictionary of parameters and returns
-        urlencoded string
-
-        :param params: Dict of query params to encode
-        :type params: dict
-        
-        :returns:  str -- URL encoded query parameters
-        """
-        return urllib.urlencode(params)
+        url = "{0}{1}".format(self._endpoint(), resource_url)
+        params.update(self._auth())
+        return requests.get(url, params=params).json()
 
     def _auth(self):
         """
@@ -72,7 +57,12 @@ class Marvel(object):
         """
         ts = datetime.datetime.now().strftime("%Y-%m-%d%H:%M:%S")
         hash_string = hashlib.md5("%s%s%s" % (ts, self.private_key, self.public_key)).hexdigest()
-        return "ts=%s&apikey=%s&hash=%s" % (ts, self.public_key, hash_string)
+        auth = {
+            'ts': ts,
+            'apikey': self.public_key,
+            'hash': hash_string
+        }
+        return auth
 
 
     #public methods
@@ -95,10 +85,10 @@ class Marvel(object):
 
         """
         url = "%s/%s" % (Character.resource_url(), id)
-        response = json.loads(self._call(url).text)
-        return CharacterDataWrapper(self, response)
+        response = self._call(url)
+        return CharacterDataWrapper(self, response, **kwargs)
         
-    def get_characters(self, *args, **kwargs):
+    def get_characters(self, **kwargs):
         """Fetches lists of comic characters with optional filters.
 
         get /v1/public/characters/{characterId}
@@ -119,8 +109,8 @@ class Marvel(object):
         
         """
         #pass url string and params string to _call
-        response = json.loads(self._call(Character.resource_url(), self._params(kwargs)).text)
-        return CharacterDataWrapper(self, response, kwargs)
+        response = self._call(Character.resource_url(), **kwargs)
+        return CharacterDataWrapper(self, response, **kwargs)
 
     def get_comic(self, id, **kwargs):
         """Fetches a single comic by id.
@@ -141,10 +131,10 @@ class Marvel(object):
         """
         
         url = "%s/%s" % (Comic.resource_url(), id)
-        response = json.loads(self._call(url).text)
-        return ComicDataWrapper(self, response)
+        response = self._call(url)
+        return ComicDataWrapper(self, response, **kwargs)
                 
-    def get_comics(self, *args, **kwargs):
+    def get_comics(self, **kwargs):
         """
         Fetches list of comics.
 
@@ -161,8 +151,8 @@ class Marvel(object):
 
         """
 
-        response = json.loads(self._call(Comic.resource_url(), self._params(kwargs)).text)
-        return ComicDataWrapper(self, response)
+        response = self._call(Comic.resource_url(), **kwargs)
+        return ComicDataWrapper(self, response, **kwargs)
         
     def get_creator(self, id, **kwargs):
         """Fetches a single creator by id.
@@ -183,10 +173,10 @@ class Marvel(object):
         """
 
         url = "%s/%s" % (Creator.resource_url(), id)
-        response = json.loads(self._call(url).text)
-        return CreatorDataWrapper(self, response)
+        response = self._call(url)
+        return CreatorDataWrapper(self, response, **kwargs)
 
-    def get_creators(self, *args, **kwargs):
+    def get_creators(self, **kwargs):
         """Fetches lists of creators.
         
         get /v1/public/creators
@@ -201,8 +191,8 @@ class Marvel(object):
         Alvin Lee
         """
         
-        response = json.loads(self._call(Creator.resource_url(), self._params(kwargs)).text)
-        return CreatorDataWrapper(self, response)
+        response = self._call(Creator.resource_url(), **kwargs)
+        return CreatorDataWrapper(self, response, **kwargs)
         
     def get_event(self, id, **kwargs):
         """Fetches a single event by id.
@@ -221,10 +211,10 @@ class Marvel(object):
         """
 
         url = "%s/%s" % (Event.resource_url(), id)
-        response = json.loads(self._call(url).text)
-        return EventDataWrapper(self, response)
+        response = self._call(url)
+        return EventDataWrapper(self, response, **kwargs)
         
-    def get_events(self, *args, **kwargs):
+    def get_events(self, **kwargs):
         """Fetches lists of events.
 
         get /v1/public/events
@@ -243,8 +233,8 @@ class Marvel(object):
         Age of Apocalypse
         """
 
-        response = json.loads(self._call(Event.resource_url(), self._params(kwargs)).text)
-        return EventDataWrapper(self, response)
+        response = self._call(Event.resource_url(), **kwargs)
+        return EventDataWrapper(self, response, **kwargs)
         
     def get_single_series(self, id):
         """Fetches a single comic series by id.
@@ -263,10 +253,10 @@ class Marvel(object):
         """
 
         url = "%s/%s" % (Series.resource_url(), id)
-        response = json.loads(self._call(url).text)
+        response = self._call(url)
         return SeriesDataWrapper(self, response)
 
-    def get_series(self, *args, **kwargs):
+    def get_series(self, **kwargs):
         """Fetches lists of events.
 
         get /v1/public/events
@@ -284,10 +274,10 @@ class Marvel(object):
         5 Ronin (2010)
         """
 
-        response = json.loads(self._call(Series.resource_url(), self._params(kwargs)).text)
-        return SeriesDataWrapper(self, response)
+        response = self._call(Series.resource_url(), **kwargs)
+        return SeriesDataWrapper(self, response, **kwargs)
 
-    def get_story(self, id):
+    def get_story(self, id, **kwargs):
         """Fetches a single story by id.
 
         get /v1/public/stories/{storyId}
@@ -304,10 +294,10 @@ class Marvel(object):
         """
 
         url = "%s/%s" % (Story.resource_url(), id)
-        response = json.loads(self._call(url).text)
-        return StoryDataWrapper(self, response)
+        response = self._call(url)
+        return StoryDataWrapper(self, response, **kwargs)
 
-    def get_stories(self, *args, **kwargs):
+    def get_stories(self, **kwargs):
         """Fetches lists of stories.
 
         get /v1/public/stories
@@ -326,5 +316,5 @@ class Marvel(object):
         Cover #477
         """
 
-        response = json.loads(self._call(Story.resource_url(), self._params(kwargs)).text)
-        return StoryDataWrapper(self, response)
+        response = self._call(Story.resource_url(), **kwargs)
+        return StoryDataWrapper(self, response, **kwargs)
