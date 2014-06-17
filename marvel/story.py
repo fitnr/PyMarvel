@@ -13,11 +13,11 @@ class StoryDataWrapper(DataWrapper):
     def data(self):
         return DataContainer(self.marvel, self.dict['data'], Story)
 
-    def next(self):
-        return self._next(self.marvel.get_stories)
+    def next(self, **kwargs):
+        return self._next(self.marvel.get_stories, **kwargs)
 
-    def previous(self):
-        return self._previous(self.marvel.get_stories)
+    def previous(self, **kwargs):
+        return self._previous(self.marvel.get_stories, **kwargs)
 
 
 class Story(DataItem):

@@ -12,11 +12,11 @@ class CharacterDataWrapper(DataWrapper):
     def data(self):
         return DataContainer(self.marvel, self.dict['data'], Character)
 
-    def next(self):
-        return self._next(self.marvel.get_characters)
+    def next(self, **kwargs):
+        return self._next(self.marvel.get_characters, **kwargs)
 
-    def previous(self):
-        return self._previous(self.marvel.get_characters)
+    def previous(self, **kwargs):
+        return self._previous(self.marvel.get_characters, **kwargs)
 
 
 class Character(DataItem):

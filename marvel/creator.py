@@ -11,11 +11,11 @@ class CreatorDataWrapper(DataWrapper):
     def data(self):
         return DataContainer(self.marvel, self.dict['data'], Creator)
 
-    def next(self):
-        return self._next(self.marvel.get_creators)
+    def next(self, **kwargs):
+        return self._next(self.marvel.get_creators, **kwargs)
 
-    def previous(self):
-        return self._previous(self.marvel.get_creators)
+    def previous(self, **kwargs):
+        return self._previous(self.marvel.get_creators, **kwargs)
 
 
 class Creator(DataItem):

@@ -13,11 +13,11 @@ class SeriesDataWrapper(DataWrapper):
     def data(self):
         return DataContainer(self.marvel, self.dict['data'], Series)
 
-    def next(self):
-        return self._next(self.marvel.get_series)
+    def next(self, **kwargs):
+        return self._next(self.marvel.get_series, **kwargs)
 
-    def previous(self):
-        return self._previous(self.marvel.get_series)
+    def previous(self, **kwargs):
+        return self._previous(self.marvel.get_series, **kwargs)
 
 
 class Series(DataItem):

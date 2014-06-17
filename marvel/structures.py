@@ -10,7 +10,7 @@ class DataWrapper(MarvelObject):
     Base DataWrapper
     """
 
-    def _next(self, method):
+    def _next(self, method, **kwargs):
         """
         Returns new DataWrapper
         Returns None if max has been reached
@@ -34,10 +34,15 @@ class DataWrapper(MarvelObject):
 
         params = dict((k, v) for k, v in self.params.items())
         params['offset'] = self.data.offset + self.data.count
+        params.update(kwargs)  # passed arguments override params
+
+        # don't send request if we're past the top
+        if params['offset'] > self.data.total:
+            return
 
         return method(**params)
 
-    def _previous(self, method):
+    def _previous(self, method, **kwargs):
         """
         Returns new DataWrapper
         returns None if offset is already 0
@@ -49,11 +54,13 @@ class DataWrapper(MarvelObject):
         if self.code != 200:
             return
 
-        if self.data.offset == 0:
-            return
-
         params = dict((k, v) for k, v in self.params.items())
         params['offset'] = max(self.data.offset - self.data.count, 0)
+        params.update(kwargs)  # passed arguments override params
+
+        # don't send request if we're at the bottom
+        if self.data.offset <= 0:
+            return
 
         return method(**params)
 

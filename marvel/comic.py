@@ -22,11 +22,11 @@ class ComicDataWrapper(DataWrapper):
     def data(self):
         return DataContainer(self.marvel, self.dict['data'], Comic)
 
-    def next(self):
-        return self._next(self.marvel.get_comics)
+    def next(self, **kwargs):
+        return self._next(self.marvel.get_comics, **kwargs)
 
-    def previous(self):
-        return self._previous(self.marvel.get_comics)
+    def previous(self, **kwargs):
+        return self._previous(self.marvel.get_comics, **kwargs)
 
 
 class Comic(DataItem):
