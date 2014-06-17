@@ -3,14 +3,14 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .core import MarvelObject, DataWrapper, DataContainer, Summary, List
+from .structures import DataItem, DataWrapper, DataContainer
 
 
 class CharacterDataWrapper(DataWrapper):
 
     @property
     def data(self):
-        return CharacterDataContainer(self.marvel, self.dict['data'])
+        return DataContainer(self.marvel, self.dict['data'], Character)
 
     def next(self):
         return self._next(self.marvel.get_characters)
@@ -19,14 +19,7 @@ class CharacterDataWrapper(DataWrapper):
         return self._previous(self.marvel.get_characters)
 
 
-class CharacterDataContainer(DataContainer):
-
-    @property
-    def results(self):
-        return self.list_to_instance_list(self.dict['results'], Character)
-
-
-class Character(MarvelObject):
+class Character(DataItem):
 
     """
     Character object
@@ -35,24 +28,8 @@ class Character(MarvelObject):
     _resource_url = 'characters'
 
     @property
-    def id(self):
-        return self.dict['id']
-
-    @property
     def name(self):
         return self.dict['name']
-
-    @property
-    def description(self):
-        return self.dict['description']
-
-    @property
-    def modified(self):
-        return self.str_to_datetime(self.dict['modified'])
-
-    @property
-    def modified_raw(self):
-        return self.dict['modified']
 
     @property
     def resourceURI(self):
@@ -81,60 +58,10 @@ class Character(MarvelObject):
         return "%s.%s" % (self.dict['thumbnail']['path'], self.dict['thumbnail']['extension'])
 
     @property
-    def comics(self):
-        from .comic import ComicList
-        """
-        Returns ComicList object
-        """
-        return ComicList(self.marvel, self.dict['comics'])
-
-    @property
-    def events(self):
-        from .event import EventList
-        """
-        Returns EventList object
-        """
-        return EventList(self.marvel, self.dict['events'])
-
-    @property
-    def stories(self):
-        from .story import StoryList
-        """
-        Returns StoryList object
-        """
-        return StoryList(self.marvel, self.dict['comics'])
-
-    @property
-    def series(self):
-        from .series import SeriesList
-        """
-        Returns SeriesList object
-        """
-        return SeriesList(self.marvel, self.dict['series'])
+    def characters(self):
+        raise AttributeError("'Character' has no attribute characters")
 
     def get_characters(self, **kwargs):
         raise AttributeError("'Character' has no attribute get_characters")
 
 
-class CharacterList(List):
-
-    """
-    CharacterList object
-    """
-    @property
-    def items(self):
-        """
-        Returns List of CharacterSummary objects
-        """
-        return self.list_to_instance_list(self.dict['items'], CharacterSummary)
-
-
-class CharacterSummary(Summary):
-
-    """
-    CharacterSummary object
-    """
-
-    @property
-    def role(self):
-        return self.dict['role']

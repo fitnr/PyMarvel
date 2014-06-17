@@ -3,8 +3,9 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .core import MarvelObject, DataWrapper, DataContainer, List, Summary, TextObject, Image
-
+from .core import MarvelObject
+from .structures import DataWrapper, DataItem, DataContainer, TextObject, Image
+from .summaries import ComicSummary
 
 class ComicDataWrapper(DataWrapper):
 
@@ -19,7 +20,7 @@ class ComicDataWrapper(DataWrapper):
     """
     @property
     def data(self):
-        return ComicDataContainer(self.marvel, self.dict['data'])
+        return DataContainer(self.marvel, self.dict['data'], Comic)
 
     def next(self):
         return self._next(self.marvel.get_comics)
@@ -28,14 +29,7 @@ class ComicDataWrapper(DataWrapper):
         return self._previous(self.marvel.get_comics)
 
 
-class ComicDataContainer(DataContainer):
-
-    @property
-    def results(self):
-        return self.list_to_instance_list(self.dict['results'], Comic)
-
-
-class Comic(MarvelObject):
+class Comic(DataItem):
 
     """
     :param marvel: Instance of Marvel class
@@ -44,10 +38,6 @@ class Comic(MarvelObject):
     :type dict: dict    
     """
     _resource_url = 'comics'
-
-    @property
-    def id(self):
-        return self.dict['id']
 
     @property
     def digitalId(self):
@@ -64,21 +54,6 @@ class Comic(MarvelObject):
     @property
     def variantDescription(self):
         return self.dict['description']
-
-    @property
-    def description(self):
-        """
-        :returns:  str -- The preferred description of the comic.
-        """
-        return self.dict['description']
-
-    @property
-    def modified(self):
-        return self.str_to_datetime(self.dict['modified'])
-
-    @property
-    def modified_raw(self):
-        return self.dict['modified']
 
     @property
     def isbn(self):
@@ -114,10 +89,6 @@ class Comic(MarvelObject):
         :returns: list -- List of TextObjects
         """
         return self.list_to_instance_list(self.dict['textObjects'], TextObject)
-
-    @property
-    def resourceURI(self):
-        return self.dict['resourceURI']
 
     @property
     def urls(self):
@@ -165,48 +136,11 @@ class Comic(MarvelObject):
         return self.list_to_instance_list(self.dict['images'], Image)
 
     @property
-    def creators(self):
-        from .creator import CreatorList
-        return CreatorList(self.marvel, self.dict['creators'])
-
-    @property
-    def characters(self):
-        from .character import CharacterList
-        return CharacterList(self.marvel, self.dict['characters'])
-
-    @property
-    def stories(self):
-        from .story import StoryList
-        return StoryList(self.marvel, self.dict['stories'])
-
-    @property
-    def events(self):
-        from .event import EventList
-        return EventList(self.marvel, self.dict['events'])
+    def comics(self):
+        raise AttributeError("'Comic' has no attribute comics")
 
     def get_comics(self):
         raise AttributeError("'Comic' has no attribute get_comics")
-
-
-class ComicList(List):
-
-    """
-    ComicList object
-    """
-
-    @property
-    def items(self):
-        """
-        Returns List of ComicSummary objects
-        """
-        return self.list_to_instance_list(self.dict['items'], ComicSummary)
-
-
-class ComicSummary(Summary):
-
-    """
-    CommicSummary object
-    """
 
 
 class ComicDate(MarvelObject):

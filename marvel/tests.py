@@ -1,12 +1,12 @@
 import unittest
 
 from .marvel import Marvel
-from .core import TextObject, Image
-from .creator import CreatorList, CreatorSummary
-from .character import CharacterDataWrapper, CharacterDataContainer, Character, CharacterList, CharacterSummary
-from .story import StoryList, StorySummary, Story
-from .event import EventList, EventSummary, Event
-from .comic import ComicDataWrapper, ComicDataContainer, Comic, ComicSummary, ComicDate, ComicPrice
+from .structures import DataContainer, ListWrapper, Image
+from .summaries import CharacterSummary, ComicSummary, CreatorSummary, StorySummary
+from .character import CharacterDataWrapper
+from .story import Story
+from .event import Event
+from .comic import ComicDataWrapper, ComicDate, ComicPrice
 from .config import *
 
 from datetime import datetime
@@ -108,7 +108,7 @@ class PyMarvelTestCase(unittest.TestCase):
         assert len(characters_dw.data.results) > 0
 
         assert type(characters_dw) is CharacterDataWrapper
-        assert type(characters_dw.data) is CharacterDataContainer
+        assert type(characters_dw.data) is DataContainer
         assert type(characters_dw.data.results) is list
 
         print "\nMarvel.get_characters():\n"
@@ -139,7 +139,7 @@ class PyMarvelTestCase(unittest.TestCase):
         assert len(self.comic_dw.data.results) > 0
 
         assert type(self.comic_dw) is ComicDataWrapper
-        assert type(self.comic_dw.data) is ComicDataContainer
+        assert type(self.comic_dw.data) is DataContainer
         assert type(self.comic_dw.data.results) is list
 
         # properties
@@ -156,17 +156,17 @@ class PyMarvelTestCase(unittest.TestCase):
         assert isinstance(self.comic_dw.data.result.thumbnail, Image)
         assert isinstance(self.comic_dw.data.result.images[0], Image)
         # lists
-        assert isinstance(self.comic_dw.data.result.creators, CreatorList)
+        assert isinstance(self.comic_dw.data.result.creators, ListWrapper)
         assert isinstance(
             self.comic_dw.data.result.creators.items[0], CreatorSummary)
-        assert isinstance(self.comic_dw.data.result.characters, CharacterList)
+        assert isinstance(self.comic_dw.data.result.characters, ListWrapper)
         assert isinstance(
             self.comic_dw.data.result.characters.items[0], CharacterSummary)
-        assert isinstance(self.comic_dw.data.result.stories, StoryList)
+        assert isinstance(self.comic_dw.data.result.stories, ListWrapper)
         assert isinstance(
             self.comic_dw.data.result.stories.items[0], StorySummary)
         # TODO: Need a test case with an Event
-        #assert isinstance(cdw.data.result.events, EventList)
+        #assert isinstance(cdw.data.result.events, ListWrapper)
         #assert isinstance(cdw.data.result.events.items[0], EventSummary)
 
         print "\nMarvel.get_comic(): \n"
@@ -218,7 +218,7 @@ class PyMarvelTestCase(unittest.TestCase):
         assert len(cdw.data.results) > 0
 
         assert type(cdw) is ComicDataWrapper
-        assert type(cdw.data) is ComicDataContainer
+        assert type(cdw.data) is DataContainer
         assert type(cdw.data.results) is list
 
         for c in cdw.data.results:
