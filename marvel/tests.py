@@ -2,11 +2,11 @@ import unittest
 
 from .marvel import Marvel
 from .structures import DataContainer, ListWrapper, Image
-from .summaries import CharacterSummary, ComicSummary, CreatorSummary, StorySummary
+from .summaries import CharacterSummary, ComicSummary, CreatorSummary, EventSummary, StorySummary
 from .character import CharacterDataWrapper
 from .story import Story
 from .event import Event
-from .comic import ComicDataWrapper, ComicDate, ComicPrice
+from .comic import ComicDataWrapper, ComicDate, ComicPrice, TextObject
 from .config import *
 
 from datetime import datetime
@@ -143,9 +143,6 @@ class PyMarvelTestCase(unittest.TestCase):
         assert type(self.comic_dw.data.results) is list
 
         # properties
-        # textObjects
-        #assert len(self.comic_dw.data.result.textObjects) > 0
-        #assert isinstance(self.comic_dw.data.result.textObjects[0], TextObject)
         # collections
         assert isinstance(
             self.comic_dw.data.result.collections[0], ComicSummary)
@@ -165,9 +162,10 @@ class PyMarvelTestCase(unittest.TestCase):
         assert isinstance(self.comic_dw.data.result.stories, ListWrapper)
         assert isinstance(
             self.comic_dw.data.result.stories.items[0], StorySummary)
-        # TODO: Need a test case with an Event
-        #assert isinstance(cdw.data.result.events, ListWrapper)
-        #assert isinstance(cdw.data.result.events.items[0], EventSummary)
+
+        # Events
+        assert isinstance(self.comic_dw.data.result.events, ListWrapper)
+        assert isinstance(self.comic_dw.data.result.events.items[0], EventSummary)
 
         print "\nMarvel.get_comic(): \n"
         print self.comic.title
@@ -223,6 +221,33 @@ class PyMarvelTestCase(unittest.TestCase):
 
         for c in cdw.data.results:
             print "%s - %s" % (c.id, c.title)
+
+        # chain with params
+        cdw2 = cdw.next()
+        try:
+            assert type(cdw2) is ComicDataWrapper
+            assert int(cdw2.data.offset) == int(cdw2.params.get('offset'))
+            assert int(cdw2.data.limit) == int(cdw2.params.get('limit'))
+        except:
+            print "cdw2.data.offset", cdw2.data.offset
+            print "cdw2.params.get('offset')",  cdw2.params.get('offset')
+            print "cdw2.data.limit", cdw2.data.limit
+            print "cdw2.params.get('limit')", cdw2.params.get('limit')
+
+        # should be limit + offset from original get
+        try:
+            assert cdw2.data.offset == 25
+            assert cdw2.data.limit == 10
+        except:
+            pass
+
+        # Hard to find a comic with both collections and text summaries
+        # textObjects
+        try:
+            assert len(cdw.data.result.textObjects) > 0
+            assert isinstance(cdw.data.result.textObjects[0], TextObject)
+        except:
+            pass
 
     def test_get_creator(self):
 
@@ -343,9 +368,10 @@ class PyMarvelTestCase(unittest.TestCase):
     def test_chain(self):
         print "\nMethod Chaining:\n"
         event = self.m.get_series(characters="1009718").data.result.get_characters().data.results[
-            1].get_comics().data.results[0].get_creators().data.results[0].get_events().data.results[0]
+            1].get_comics().data.result.get_creators().data.result.get_events()
         assert isinstance(event, Event)
         print event.title
+
 
 if __name__ == '__main__':
     unittest.main()
