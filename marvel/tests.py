@@ -5,7 +5,7 @@ from .structures import DataContainer, ListWrapper, Image
 from .summaries import CharacterSummary, ComicSummary, CreatorSummary, EventSummary, StorySummary
 from .character import CharacterDataWrapper
 from .story import Story
-from .event import Event
+from .event import EventDataWrapper, Event
 from .comic import ComicDataWrapper, ComicDate, ComicPrice, TextObject
 from .config import *
 
@@ -367,10 +367,11 @@ class PyMarvelTestCase(unittest.TestCase):
 
     def test_chain(self):
         print "\nMethod Chaining:\n"
-        event = self.m.get_series(characters="1009718").data.result.get_characters().data.results[
+        events = self.m.get_series(characters="1009718").data.result.get_characters().data.results[
             1].get_comics().data.result.get_creators().data.result.get_events()
-        assert isinstance(event, Event)
-        print event.title
+        assert isinstance(events, EventDataWrapper)
+        assert isinstance(events.data.result, Event)
+        print events.data.result.title
 
 
 if __name__ == '__main__':
