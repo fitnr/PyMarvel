@@ -10,7 +10,11 @@ class DataWrapper(MarvelObject):
     Base DataWrapper
     """
 
-    def _next(self, method, **kwargs):
+    @property
+    def data(self):
+        return DataContainer(self.marvel, self.dict['data'], self.item_class)
+
+    def next(self, **kwargs):
         """
         Returns new DataWrapper
         Returns None if max has been reached
@@ -40,9 +44,9 @@ class DataWrapper(MarvelObject):
         if params['offset'] > self.data.total:
             return
 
-        return method(**params)
+        return self.getter(**params)
 
-    def _previous(self, method, **kwargs):
+    def previous(self, **kwargs):
         """
         Returns new DataWrapper
         returns None if offset is already 0
@@ -62,7 +66,7 @@ class DataWrapper(MarvelObject):
         if self.data.offset <= 0:
             return
 
-        return method(**params)
+        return self.getter(**params)
 
     @property
     def code(self):

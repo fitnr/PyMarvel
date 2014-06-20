@@ -3,21 +3,17 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .structures import DataItem, DataWrapper, DataContainer, Image
+from .structures import DataItem, DataWrapper, Image
 from .summaries import EventSummary
 
 
 class EventDataWrapper(DataWrapper):
 
-    @property
-    def data(self):
-        return DataContainer(self.marvel, self.dict['data'], Event)
+    def __init__(self, marvel, response, **params):
+        super(EventDataWrapper, self).__init__(marvel, response, **params)
 
-    def next(self, **kwargs):
-        return self._next(self.marvel.get_events, **kwargs)
-
-    def previous(self, **kwargs):
-        return self._previous(self.marvel.get_events, **kwargs)
+        self.item_class = Event
+        self.getter = self.marvel.get_events
 
 
 class Event(DataItem):

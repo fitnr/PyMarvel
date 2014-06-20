@@ -3,19 +3,16 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .structures import DataWrapper, DataItem, DataContainer
+from .structures import DataWrapper, DataItem
+
 
 class CreatorDataWrapper(DataWrapper):
 
-    @property
-    def data(self):
-        return DataContainer(self.marvel, self.dict['data'], Creator)
+    def __init__(self, marvel, response, **params):
+        super(CreatorDataWrapper, self).__init__(marvel, response, **params)
 
-    def next(self, **kwargs):
-        return self._next(self.marvel.get_creators, **kwargs)
-
-    def previous(self, **kwargs):
-        return self._previous(self.marvel.get_creators, **kwargs)
+        self.item_class = Creator
+        self.getter = self.marvel.get_creators
 
 
 class Creator(DataItem):
@@ -80,5 +77,3 @@ class Creator(DataItem):
 
     def get_creators(self):
         raise AttributeError("'Creator' has no attribute get_creators")
-
-

@@ -4,29 +4,17 @@ __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
 from .core import MarvelObject
-from .structures import DataWrapper, DataItem, DataContainer, TextObject, Image
+from .structures import DataWrapper, DataItem, TextObject, Image
 from .summaries import ComicSummary
+
 
 class ComicDataWrapper(DataWrapper):
 
-    """
-    :param marvel: Instance of Marvel class
-    :type marvel: marvel.Marvel
-    :parm dict: Dict of object, created from json response.
-    :type dict: dict
-    :parm params: Optional dict of query params sent to original API call
-    :type params: dict
-    
-    """
-    @property
-    def data(self):
-        return DataContainer(self.marvel, self.dict['data'], Comic)
+    def __init__(self, marvel, response, **params):
+        super(ComicDataWrapper, self).__init__(marvel, response, **params)
 
-    def next(self, **kwargs):
-        return self._next(self.marvel.get_comics, **kwargs)
-
-    def previous(self, **kwargs):
-        return self._previous(self.marvel.get_comics, **kwargs)
+        self.item_class = Comic
+        self.getter = self.marvel.get_comics
 
 
 class Comic(DataItem):

@@ -3,21 +3,17 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .structures import DataWrapper, DataContainer, DataItem, Image
+from .structures import DataWrapper, DataItem, Image
 from .summaries import SeriesSummary
 
 
 class SeriesDataWrapper(DataWrapper):
 
-    @property
-    def data(self):
-        return DataContainer(self.marvel, self.dict['data'], Series)
+    def __init__(self, marvel, response, **params):
+        super(SeriesDataWrapper, self).__init__(marvel, response, **params)
 
-    def next(self, **kwargs):
-        return self._next(self.marvel.get_series, **kwargs)
-
-    def previous(self, **kwargs):
-        return self._previous(self.marvel.get_series, **kwargs)
+        self.item_class = Series
+        self.getter = self.marvel.get_series
 
 
 class Series(DataItem):
@@ -66,5 +62,3 @@ class Series(DataItem):
 
     def get_series(self):
         raise AttributeError("'Series' has no attribute get_series")
-
-

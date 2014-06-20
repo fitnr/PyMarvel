@@ -3,20 +3,16 @@
 __author__ = 'Garrett Pennington'
 __date__ = '02/07/14'
 
-from .structures import DataItem, DataWrapper, DataContainer
+from .structures import DataItem, DataWrapper
 
 
 class CharacterDataWrapper(DataWrapper):
 
-    @property
-    def data(self):
-        return DataContainer(self.marvel, self.dict['data'], Character)
+    def __init__(self, marvel, response, **params):
+        super(CharacterDataWrapper, self).__init__(marvel, response, **params)
 
-    def next(self, **kwargs):
-        return self._next(self.marvel.get_characters, **kwargs)
-
-    def previous(self, **kwargs):
-        return self._previous(self.marvel.get_characters, **kwargs)
+        self.item_class = Character
+        self.getter = self.marvel.get_characters
 
 
 class Character(DataItem):
@@ -63,5 +59,3 @@ class Character(DataItem):
 
     def get_characters(self, **kwargs):
         raise AttributeError("'Character' has no attribute get_characters")
-
-
