@@ -237,7 +237,7 @@ class Marvel(object):
         response = self._call(Event.resource_url(), **kwargs)
         return EventDataWrapper(self, response, **kwargs)
 
-    def get_single_series(self, id):
+    def get_single_series(self, id, **kwargs):
         """Fetches a single comic series by id.
 
         get /v1/public/series/{seriesId}
