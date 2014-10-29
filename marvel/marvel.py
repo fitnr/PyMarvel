@@ -43,7 +43,7 @@ class Marvel(object):
         :type resource_url: str
         :param params: query params to add to endpoint
         :type params: str
-        
+
         :returns:  response -- Requests response
         """
         url = "{0}{1}".format(self._endpoint(), resource_url)
@@ -53,7 +53,7 @@ class Marvel(object):
     def _auth(self):
         """
         Creates hash from api keys and returns all required parametsrs
-        
+
         :returns:  str -- URL encoded query parameters containing "ts", "apikey", and "hash"
         """
         ts = datetime.datetime.now().strftime("%Y-%m-%d%H:%M:%S")
@@ -67,14 +67,14 @@ class Marvel(object):
         return auth
 
     # public methods
-    def get_character(self, id, **kwargs):
+    def get_character(self, _id, **kwargs):
         """Fetches a single character by id.
 
         get /v1/public/characters
 
         :param id: ID of Character
         :type params: int
-        
+
         :returns:  CharacterDataWrapper
 
         >>> m = Marvel(public_key, private_key)
@@ -85,7 +85,7 @@ class Marvel(object):
         Wolverine
 
         """
-        url = "%s/%s" % (Character.resource_url(), id)
+        url = "%s/%s" % (Character.resource_url(), _id)
         response = self._call(url)
         return CharacterDataWrapper(self, response, **kwargs)
 
@@ -107,20 +107,20 @@ class Marvel(object):
         Ajak
         Ajaxis
         Akemi
-        
+
         """
         # pass url string and params string to _call
         response = self._call(Character.resource_url(), **kwargs)
         return CharacterDataWrapper(self, response, **kwargs)
 
-    def get_comic(self, id, **kwargs):
+    def get_comic(self, _id, **kwargs):
         """Fetches a single comic by id.
-        
+
         get /v1/public/comics/{comicId}
-        
+
         :param id: ID of Comic
         :type params: int
-        
+
         :returns:  ComicDataWrapper
 
         >>> m = Marvel(public_key, private_key)
@@ -131,7 +131,7 @@ class Marvel(object):
         Some Comic
         """
 
-        url = "%s/%s" % (Comic.resource_url(), id)
+        url = "%s/%s" % (Comic.resource_url(), _id)
         response = self._call(url)
         return ComicDataWrapper(self, response, **kwargs)
 
@@ -140,9 +140,9 @@ class Marvel(object):
         Fetches list of comics.
 
         get /v1/public/comics
-                
+
         :returns:  ComicDataWrapper
-        
+
         >>> m = Marvel(public_key, private_key)
         >>> cdw = m.get_comics(orderBy="issueNumber,-modified", limit="10", offset="15")
         >>> print cdw.data.count
@@ -155,14 +155,14 @@ class Marvel(object):
         response = self._call(Comic.resource_url(), **kwargs)
         return ComicDataWrapper(self, response, **kwargs)
 
-    def get_creator(self, id, **kwargs):
+    def get_creator(self, _id, **kwargs):
         """Fetches a single creator by id.
 
         get /v1/public/creators/{creatorId}
 
         :param id: ID of Creator
         :type params: int
-        
+
         :returns:  CreatorDataWrapper
 
         >>> m = Marvel(public_key, private_key)
@@ -173,15 +173,15 @@ class Marvel(object):
         Stan Lee
         """
 
-        url = "%s/%s" % (Creator.resource_url(), id)
+        url = "%s/%s" % (Creator.resource_url(), _id)
         response = self._call(url)
         return CreatorDataWrapper(self, response, **kwargs)
 
     def get_creators(self, **kwargs):
         """Fetches lists of creators.
-        
+
         get /v1/public/creators
-        
+
         :returns:  CreatorDataWrapper
 
         >>> m = Marvel(public_key, private_key)
@@ -195,14 +195,14 @@ class Marvel(object):
         response = self._call(Creator.resource_url(), **kwargs)
         return CreatorDataWrapper(self, response, **kwargs)
 
-    def get_event(self, id, **kwargs):
+    def get_event(self, _id, **kwargs):
         """Fetches a single event by id.
 
         get /v1/public/event/{eventId}
 
         :param id: ID of Event
         :type params: int
-        
+
         :returns:  EventDataWrapper
 
         >>> m = Marvel(public_key, private_key)
@@ -211,7 +211,7 @@ class Marvel(object):
         Infinity Gauntlet
         """
 
-        url = "%s/%s" % (Event.resource_url(), id)
+        url = "%s/%s" % (Event.resource_url(), _id)
         response = self._call(url)
         return EventDataWrapper(self, response, **kwargs)
 
@@ -237,33 +237,33 @@ class Marvel(object):
         response = self._call(Event.resource_url(), **kwargs)
         return EventDataWrapper(self, response, **kwargs)
 
-    def get_single_series(self, id, **kwargs):
+    def get_single_series(self, _id, **kwargs):
         """Fetches a single comic series by id.
 
         get /v1/public/series/{seriesId}
 
         :param id: ID of Series
         :type params: int
-        
+
         :returns:  SeriesDataWrapper
-        
+
         >>> m = Marvel(public_key, private_key)
         >>> response = m.get_single_series(12429)
         >>> print response.data.result.title
         5 Ronin (2010)
         """
 
-        url = "%s/%s" % (Series.resource_url(), id)
+        url = "%s/%s" % (Series.resource_url(), _id)
         response = self._call(url)
-        return SeriesDataWrapper(self, response)
+        return SeriesDataWrapper(self, response, **kwargs)
 
     def get_series(self, **kwargs):
         """Fetches lists of events.
 
         get /v1/public/events
-        
+
         :returns:  SeriesDataWrapper
-        
+
         >>> #Find all the series that involved Wolverine
         >>> #wolverine's id: 1009718
         >>> m = Marvel(public_key, private_key)
@@ -278,23 +278,23 @@ class Marvel(object):
         response = self._call(Series.resource_url(), **kwargs)
         return SeriesDataWrapper(self, response, **kwargs)
 
-    def get_story(self, id, **kwargs):
+    def get_story(self, _id, **kwargs):
         """Fetches a single story by id.
 
         get /v1/public/stories/{storyId}
 
         :param id: ID of Story
         :type params: int
-        
+
         :returns:  StoryDataWrapper
-        
+
         >>> m = Marvel(public_key, private_key)
         >>> response = m.get_story(29)
         >>> print response.data.result.title
         Caught in the heart of a nuclear explosion, mild-mannered scientist Bruce Banner finds himself...
         """
 
-        url = "%s/%s" % (Story.resource_url(), id)
+        url = "%s/%s" % (Story.resource_url(), _id)
         response = self._call(url)
         return StoryDataWrapper(self, response, **kwargs)
 
@@ -302,9 +302,9 @@ class Marvel(object):
         """Fetches lists of stories.
 
         get /v1/public/stories
-        
+
         :returns:  StoryDataWrapper
-        
+
         >>> #Find all the stories that involved both Hulk and Wolverine
         >>> #hulk's id: 1009351
         >>> #wolverine's id: 1009718

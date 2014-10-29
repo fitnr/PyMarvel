@@ -8,6 +8,8 @@ class DataWrapper(MarvelObject):
 
     """
     Base DataWrapper
+
+    item_class and getter are set by child classes
     """
 
     @property
